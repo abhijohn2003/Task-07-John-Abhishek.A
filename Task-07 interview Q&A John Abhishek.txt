@@ -1,0 +1,49 @@
+1. What is a View?
+   = A view is a virtual table created using a SQL SELECT query.
+
+2. Can we update data through a view?
+   = Yes, but only if the view is based on a single table.
+
+3. What is a Materialized View?
+   = A materialized view is like a regular view, but it stores the query result physically like a table.
+
+4. Difference Between View and Table
+   = View :
+* No physical storage
+* Slower (real-time query)
+   = Table :
+* Data is stored physically
+* Faster (stored data).
+
+5. How to Drop a View?
+   = Drop View view_name;
+
+6. Why Use Views?
+   = Simplify complex queries
+     Protect sensitive data
+     Provide different views for different users.
+
+7. Can We Create Indexed Views?
+   = In MySQL: No native support for indexed views.
+     In SQL Server: Yes, but with strict rule.
+     In PostgreSQL/Oracle: Use materialized views with indexes.
+
+8. How to Secure Data Using Views?
+   = You can hide sensitive columns using views:
+CODE:
+Create View Safeguards as
+select COl1,Col2 from Table_name;
+
+Then:
+GRANT SELECT ON Safeguards TO 'readonly_user'@'localhost';
+
+9. What Are Limitations of Views?
+   = Can't store data permanently 
+     Some views can't be updated
+     Views can slow down if query is complex.
+
+10. How Does WITH CHECK OPTION Work?
+    = Ensures that INSERT/UPDATE operations on the view follow the view's WHERE condition.
+* Prevents inserting rows 
+* Prevents updating rows.
+

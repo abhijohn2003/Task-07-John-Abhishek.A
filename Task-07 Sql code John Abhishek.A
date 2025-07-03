@@ -1,0 +1,184 @@
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bible              |
+| customers_info     |
+| information_schema |
+| laptop             |
+| librarydb          |
+| mysql              |
+| performance_schema |
+| sunday_class       |
+| xitadel_co         |
+| zion_info          |
++--------------------+
+10 rows in set (0.023 sec)
+
+mysql> use  customers_info;
+Database changed
+mysql> show tables;
++--------------------------+
+| Tables_in_customers_info |
++--------------------------+
+| customers                |
+| orders                   |
++--------------------------+
+2 rows in set (0.151 sec)
+
+mysql> select * from Customers;
++------------+-------+-----------+
+| CustomerID | Name  | City      |
++------------+-------+-----------+
+|          1 | John  | Chennai   |
+|          2 | Priya | Mumbai    |
+|          3 | Ravi  | Bangalore |
+|          4 | Sneha | Delhi     |
++------------+-------+-----------+
+4 rows in set (0.296 sec)
+
+mysql> select * from orders;
++---------+------------+----------+
+| OrderID | CustomerID | Product  |
++---------+------------+----------+
+|     101 |          1 | Laptop   |
+|     102 |          2 | Tablet   |
+|     103 |          1 | Mouse    |
+|     104 |          3 | Keyboard |
++---------+------------+----------+
+4 rows in set (0.164 sec)
+
+mysql> view
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'view' at line 1
+mysql> create view CustomerOderDetials as
+    -> select
+    -> c.customerID,
+    -> c.Name as CustomerName,
+    -> c.city,
+    -> o.orderID,
+    -> o.Product
+    -> From Customers c
+    -> join
+    -> c.customerID = o.customerID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= o.customerID' at line 10
+mysql> CREATE VIEW CUstomerOrderDetails as
+    -> Select c.CustomerID,
+    -> c.Name as CustomerName,
+    -> c.city,
+    -> o.orderID,
+    -> o.Product
+    -> from Customers c
+    -> Join Order.o on c.customerID = o.customerID;
+ERROR 1049 (42000): Unknown database 'order'
+mysql> CREATE VIEW CUstomerOrderDetails as
+    -> select
+    -> c.customerID,
+    -> c.Name as CustomerName,
+    -> c.city,
+    -> o.orderID,
+    -> o.Product
+    -> From Customers c
+    -> Join Orders o on c.customerID = o.customerID;
+Query OK, 0 rows affected (0.125 sec)
+
+mysql> select * from  CUstomerOrderDetails;
++------------+--------------+-----------+---------+----------+
+| customerID | CustomerName | city      | orderID | Product  |
++------------+--------------+-----------+---------+----------+
+|          1 | John         | Chennai   |     101 | Laptop   |
+|          2 | Priya        | Mumbai    |     102 | Tablet   |
+|          1 | John         | Chennai   |     103 | Mouse    |
+|          3 | Ravi         | Bangalore |     104 | Keyboard |
++------------+--------------+-----------+---------+----------+
+4 rows in set (0.019 sec)
+
+mysql> create view Details as select customername,city from customers where customerID in (2,4);
+ERROR 1054 (42S22): Unknown column 'customername' in 'field list'
+mysql> create view Details as select name,city from customers where customerID in (2,4);
+Query OK, 0 rows affected (0.079 sec)
+
+mysql> select * from Details;
++-------+--------+
+| name  | city   |
++-------+--------+
+| Priya | Mumbai |
+| Sneha | Delhi  |
++-------+--------+
+2 rows in set (0.025 sec)
+
+mysql> CREATE VIEW CustomerProducts AS
+    -> SELECT Customers.Name, Customers.City, Orders.Product
+    -> FROM Customers
+    -> JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+Query OK, 0 rows affected (0.072 sec)
+
+mysql> select * from CustomerProduct;
+ERROR 1146 (42S02): Table 'customers_info.customerproduct' doesn't exist
+mysql> select * from CustomerProducts;
++-------+-----------+----------+
+| Name  | City      | Product  |
++-------+-----------+----------+
+| John  | Chennai   | Laptop   |
+| Priya | Mumbai    | Tablet   |
+| John  | Chennai   | Mouse    |
+| Ravi  | Bangalore | Keyboard |
++-------+-----------+----------+
+4 rows in set (0.025 sec)
+
+mysql> show tables;
++--------------------------+
+| Tables_in_customers_info |
++--------------------------+
+| customerorderdetails     |
+| customerproducts         |
+| customers                |
+| details                  |
+| orders                   |
++--------------------------+
+5 rows in set (0.032 sec)
+
+mysql> CREATE VIEW PublicCustomerList AS
+    -> SELECT Name, City FROM Customers;
+Query OK, 0 rows affected (0.068 sec)
+
+mysql> GRANT SELECT ON PublicCustomerList TO 'readonly_user'@'localhost';
+ERROR 1410 (42000): You are not allowed to create a user with GRANT
+mysql> select * from  PublicCustomerList;
++-------+-----------+
+| Name  | City      |
++-------+-----------+
+| John  | Chennai   |
+| Priya | Mumbai    |
+| Ravi  | Bangalore |
+| Sneha | Delhi     |
++-------+-----------+
+4 rows in set (0.011 sec)
+
+mysql> show tables;
++--------------------------+
+| Tables_in_customers_info |
++--------------------------+
+| customerorderdetails     |
+| customerproducts         |
+| customers                |
+| details                  |
+| orders                   |
+| publiccustomerlist       |
++--------------------------+
+6 rows in set (0.030 sec)
+
+mysql>
